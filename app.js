@@ -14,6 +14,7 @@
     const app = express();
 
     const admin = require('./routes/admin');
+    const user = require('./routes/user');
 
 // Configuracoes
     // Sessão
@@ -105,6 +106,7 @@
     });
 
     app.use('/admin', admin);
+    app.use('/users', user);
 
 // Outros
 const PORT = 3000;
