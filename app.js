@@ -6,6 +6,11 @@
     const path = require('path');
     const session = require('express-session');
     const flash = require('connect-flash');
+    require('./models/Post');
+    const Post = mongoose.model('posts');
+    require('./models/Category');
+    const Category = mongoose.model('categories');
+
     const app = express();
 
     const admin = require('./routes/admin');
@@ -43,6 +48,62 @@
     app.use(express.static(path.join(__dirname, 'public')));
 
 // Rotas
+    app.get('/', (req, res) => {
+
+        Post.find().populate('categoria').sort({date: 'desc'}).then((posts) => {
+            res.render('index', {posts: posts});
+        }).catch((err) => {
+            req.flash('error_msg', 'Houve um erro interno.');
+            res.redirect('/404');
+        });
+    });
+
+    app.get('/posts/:slug', (req, res) => {
+        Post.findOne({slug: req.params.slug}).then((post) => {
+            if(post) {
+                res.render('posts/index', {post: post});
+            } else {
+                req.flash('error_msg', 'Postagem não existe.');
+                res.redirect('/');
+            }
+        }).catch((err) => {
+            req.flash('error_msg', 'Houve um erro interno');
+            res.redirect('/');
+        });
+    });
+
+    app.get('/categories', (req, res) => {
+        Category.find().then((categories) => {
+            res.render('categories/index', {categories: categories});
+        }).catch((err) => {
+            req.flash('error_msg', 'Erro interno ao listar categorias.');
+            res.redirect('/');
+        });
+    });
+
+    app.get('/categories/:slug', (req, res) => {
+        Category.findOne({slug: req.params.slug}).then((category) => {
+            if(category) {
+                Post.find({categoria: category._id}).then((posts) => {
+                    res.render('categories/posts', {posts: posts, category: category});
+                }).catch((err) => {
+                    req.flash('error_msg', 'Erro ao listar postagens.');
+                    res.redirect('/');
+                });
+            } else{
+                req.flash('error_msg', 'Categoria não existe.');
+                res.redirect('/');
+            }
+        }).catch((err) => {
+            req.flash('error_msg', 'Erro interno ao carregar página da categoria.');
+            res.redirect('/');
+        })
+    });
+
+    app.get('/404', (req, res) => {
+        res.send('Erro 404!');
+    });
+
     app.use('/admin', admin);
 
 // Outros
