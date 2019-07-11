@@ -10,6 +10,10 @@ const User = new Schema({
         type: String,
         require: true
     },
+    eAdmin : {
+        type: Number,
+        default: 0
+    },
     senha: {
         type: String,
         require: true
