@@ -40,14 +40,14 @@
     });
 
     // BodyParser
-    app.use(bodyParser.urlencoded({extendes: true}));
+    app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
     // Handlebars
     app.engine('handlebars', handlebars({defaultLayout: 'main'}));
     app.set('view engine', 'handlebars');
     // Mongoose
     mongoose.Promise = global.Promise;
-    mongoose.connect('mongodb://localhost/blogapp').then(() => {
+    mongoose.connect('mongodb://localhost/blogapp', { useNewUrlParser: true }).then(() => {
         console.log('MongoDb Database Connected.');    
     }).catch((err) => {
         console.log(`Error on MongoDb Connection: ${err}`);        

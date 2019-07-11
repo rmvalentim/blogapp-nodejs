@@ -13,7 +13,9 @@
         <a class="nav-link" href="/categories">Categorias</a>
       </li>     
       {{#if user}}
-      
+      <li class="nav-item">
+        <a class="nav-link" href="/users/logout" >Sair</a>
+      </li>
       {{else}} 
       <li class="nav-item">
         <a class="nav-link" href="/users/login" >Login</a>
@@ -21,7 +23,27 @@
       <li class="nav-item">
         <a class="nav-link" href="/users/register" >Registro</a>
       </li>
-      {{/if}}
-    </ul>    
+      {{/if}}  
+      {{#if user.eAdmin}}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Admin
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/admin/categories">Categorias</a>
+          <a class="dropdown-item" href="/admin/posts">Postagens</a>          
+        </div>
+      </li>
+      {{/if}} 
+    </ul>  
+  {{#if user.eAdmin}}  
   </div>
+      <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#">Seja bem vindo {{user.nome}}</a>
+            </li>            
+        </ul>
+    </div>
+  {{/if}}
 </nav>
